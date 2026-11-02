@@ -4,21 +4,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-pas = os.getenv("PASSWORD_DB")
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 
 async def connection_db():
     try:
-        conn = await asyncpg.connect(
-            host="localhost",
-            port=5432,
-            user="postgres",
-            password=pas,
-            database="exam4_db"
-        )
+        conn = await asyncpg.connect(DATABASE_URL)
         return conn
     except Exception as error:
-        print(f"connection error: {error}")
+        print(f"Connection error: {error}")
+        return None
     
 async def create_table():
     conn = await connection_db()
