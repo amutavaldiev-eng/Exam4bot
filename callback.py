@@ -29,6 +29,14 @@ def save_product_keyboard(products):
     keybor = InlineKeyboardMarkup(inline_keyboard=keyboard)
     return keybor
 
+def save_produc_keyboard(products):
+    keyboard = []
+    for product in products:
+        keyboard.append([
+            InlineKeyboardButton(text=f'{product["name"]}', callback_data=f'save_{product["products_id"]}')])
+    keybor = InlineKeyboardMarkup(inline_keyboard=keyboard)
+    return keybor
+
 
 def sold_product_keyboard(products):
     keyboard = []
@@ -40,10 +48,20 @@ def sold_product_keyboard(products):
 
     return InlineKeyboardMarkup(inline_keyboard=keyboard)
 
+def delete_save_keyboard(products):
+    keyboard = []
+    for product in products:
+        keyboard.append([
+            InlineKeyboardButton(text="🗑", callback_data=f'delete_saved_{product["products_id"]}')])
+    keybor = InlineKeyboardMarkup(inline_keyboard=keyboard)
+    return keybor
+
+
+
 def delete_saved_keyboard(products):
     keyboard = []
     for product in products:
         keyboard.append([
-            InlineKeyboardButton(text=product["name"], callback_data=f'delete_saved_{product["products_id"]}')])
+            InlineKeyboardButton(text=f'🗑 - {product["name"]}', callback_data=f'delete_saved_{product["products_id"]}')])
     keybor = InlineKeyboardMarkup(inline_keyboard=keyboard)
     return keybor

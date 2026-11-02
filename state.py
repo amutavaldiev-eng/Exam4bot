@@ -152,17 +152,23 @@ async def save_product_start(message: Message):
     products = await get_all_products()
     if not products:
         return await message.answer("No products found! ❌")
-    await message.answer("Choose product to save:",reply_markup=save_product_keyboard(products))
+    await message.answer("Choose product to save:",reply_markup=save_produc_keyboard(products))
 @router.callback_query(F.data.startswith("save_"))
 async def save_product_callback(callback: CallbackQuery):
     product_id = int(callback.data.split("_")[1])
-    result = await save_product(callback.from_user.id,product_id)
-    if result:
+    result = await save_product(callback.from_user.id, product_id)
+    if result == "success":
         await callback.message.answer("Product saved successfully! ✅")
-    else:
-        await callback.message.answer("You can't save own Product! ❌")
-    await callback.answer()
 
+    elif result == "already_saved":
+        await callback.message.answer("You can save only 1 time! ❌")
+
+    elif result == "own_product":
+        await callback.message.answer("You can't save own Product! ❌")
+
+    elif result == "not_found":
+        await callback.message.answer("Product not found! ❌")
+    await callback.answer()
     
     
 @router.message(F.text == "✅ Mark as Sold")

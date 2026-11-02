@@ -71,18 +71,30 @@ async def save_product(user_id, product_id):
             select * from products
             where products_id = $1 and status = 'active'
         """, product_id)
+        if not product:
+            return "not_found"
+
+
+        if str(user_id) == product["telegram_id"]:
+            return "own_product"
+
+        exists = await conn.fetchrow("""
+            select * from saved_products
+            where user_id = $1 and product_id = $2
+        """, str(user_id), product_id)
         
-        if str(user_id) == product['telegram_id']:
-            return False
+        if exists:
+            return "already_saved"
+        
         
         await conn.execute("""
             insert into saved_products (user_id, product_id)
             values ($1, $2)
         """, str(user_id), product_id)
-        return True
+        return "success"
     except Exception as error:
         print(f"Save product error: {error}")
-        return False
+        return "error"
     finally:
         await conn.close()
         
@@ -128,7 +140,8 @@ async def delete_saved_product(user_id, product_id):
             delete from saved_products
             where user_id = $1 and product_id = $2
         """, str(user_id), product_id)
-        return result
+        
+        return result == "DELETE 1"
     except Exception as error:
         print(f"Delete saved product error: {error}")   
     finally:

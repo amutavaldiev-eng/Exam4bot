@@ -61,7 +61,7 @@ async def show_saved_products(message: Message):
 💰 Price: {product["price"]} somoni
 📝 Description: {product["description"]}
 📌 Status: {product["status"]}
-""",reply_markup=delete_saved_keyboard([product]))
+""",reply_markup=delete_save_keyboard([product]))
         
         
 
